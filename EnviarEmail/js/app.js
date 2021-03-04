@@ -99,6 +99,7 @@ function enviarEmail(e){
 
 function resetForm(){
     formulario.reset();
+    removeBorder();
 }
 
 function removeBorder(){
