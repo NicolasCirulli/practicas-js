@@ -35,6 +35,22 @@ class Presupuesto {
         })
         this.restante = suma;
     }
+    calcularPorcentaje(presupuestoActual){
+        const {presupuesto, restante} = presupuestoActual;
+        const restanteDiv = document.querySelector('.restante');
+        let calculo = restante / (presupuesto / 100);
+        if(calculo < 30){
+            restanteDiv.classList.remove('alert-success', 'alert-warning');
+            restanteDiv.classList.add('alert-danger');
+
+            return
+        }else if(calculo < 60){
+            restanteDiv.classList.remove('alert-success' , 'alert-danger');
+            restanteDiv.classList.add('alert-warning');
+            return
+        }
+
+    }
 }
 
 class Ui {
@@ -147,6 +163,7 @@ function agregarGasto(e){
     form.reset();
     // Muestra el nuevo presupuesto
     ui.agregarPresupuesto(presupuestoDisponible)
+    presupuestoDisponible.calcularPorcentaje(presupuestoDisponible);
 }
 
 function borrarGasto(){
