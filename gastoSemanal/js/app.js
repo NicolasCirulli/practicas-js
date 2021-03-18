@@ -39,17 +39,22 @@ class Presupuesto {
         const {presupuesto, restante} = presupuestoActual;
         const restanteDiv = document.querySelector('.restante');
         let calculo = restante / (presupuesto / 100);
-        if(calculo < 30){
+        if(calculo < 25){
             restanteDiv.classList.remove('alert-success', 'alert-warning');
             restanteDiv.classList.add('alert-danger');
 
             return
-        }else if(calculo < 60){
+        }else if(calculo < 50){
             restanteDiv.classList.remove('alert-success' , 'alert-danger');
             restanteDiv.classList.add('alert-warning');
             return
+        }else if(calculo > 51){
+            restanteDiv.classList.remove('alert-warning' , 'alert-danger');
+            restanteDiv.classList.add('alert-success');
         }
-
+    }
+    eliminarGasto(id){
+        this.gastos = this.gastos.filter( gasto => gasto.id !== id);
     }
 }
 
@@ -107,6 +112,9 @@ class Ui {
             btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
             btnBorrar.textContent = 'borrar';
             nuevoLi.appendChild(btnBorrar);
+            btnBorrar.onclick = () =>{
+                eliminarGasto(id);
+            }
 
             //Agregar el HTML
             listaGastos.appendChild(nuevoLi);
@@ -168,4 +176,18 @@ function agregarGasto(e){
 
 function borrarGasto(){
     console.log('borrando gasto');
+}
+
+function eliminarGasto(id){
+    // Elimina el gasto del obj
+    presupuestoDisponible.eliminarGasto(id);
+    presupuestoDisponible.resta()
+
+    // Elimina el gasto del html
+    const { gastos } = presupuestoDisponible;
+    ui.mostrarGastosHtml(gastos);
+
+    // Actualiza el restante y su color 
+    ui.agregarPresupuesto(presupuestoDisponible)
+    presupuestoDisponible.calcularPorcentaje(presupuestoDisponible);
 }
