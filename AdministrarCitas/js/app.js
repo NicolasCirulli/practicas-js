@@ -5,11 +5,12 @@ const iTelefono = document.querySelector('#telefono');
 const iFecha = document.querySelector('#fecha');
 const iHora = document.querySelector('#hora');
 const iSintomas = document.querySelector('#sintomas');
-const botonCrear = document.querySelector('.btn');
+const botonCrear = document.querySelector('#botonCrear');
 
 // UI
 const form = document.querySelector('#nueva-cita');
 const contenedorCitas = document.querySelector('#citas');
+let editando = false;
 
 // Events
 eventListener();
@@ -39,6 +40,9 @@ function eventListener(){
         }
         eliminarCita(id){
             this.citas = this.citas.filter( cita => cita.id !== id);
+        }
+        editCita(citaActualizada){
+            this.citas = this.citas.map( cita => cita.id === citaActualizada.id ? citaActualizada : cita )
         }
 }
 
@@ -172,13 +176,32 @@ function validarDatos(e){
         ui.imprimirAlerta('todos los campos son obligatorios', 'error');
         return
     }
+
+    if(editando){
+       
+        ui.imprimirAlerta('Se edito correctamente');
+
+        administradorCitas.editCita({...citaObj})
+
+        botonCrear.textContent = 'Crear cita';
+
+        editando = false;
+
+        
+    }else{
+                // Generar un ID 
+        citaObj.id = Date.now()
+
+        administradorCitas.agregarCita({...citaObj});
+
+        //Mensaje de alerta 
+       
+    }
+
     //crear una nueva cita
 
 
-    // Generar un ID 
-    citaObj.id = Date.now()
 
-    administradorCitas.agregarCita({...citaObj});
 
     reiniciarObj()
 
@@ -211,5 +234,26 @@ function quitarCita(id){
 }
 
 function editarCita(cita){
+
+    const {mascota,propietario,telefono,fecha,hora,sintomas,id} = cita;
+    iMascotas.value = mascota; 
+    iPropietarios.value = propietario;
+    iTelefono.value = telefono;
+    iFecha.value = fecha;
+    iHora.value = hora;
+    iSintomas.value = sintomas;
+
+   
+
+    citaObj.mascota = iMascotas.value;
+    citaObj.propietario = iPropietarios.value;
+    citaObj.telefono = iTelefono.value;
+    citaObj.fecha = iFecha.value;
+    citaObj.hora = iHora.value;
+    citaObj.sintomas = iSintomas.value;
+    citaObj.id = id;
+   
+    botonCrear.textContent = 'Editar cita ';
+    editando = true;
 
 }
